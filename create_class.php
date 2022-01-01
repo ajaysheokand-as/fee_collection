@@ -65,7 +65,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="card-body">
                 <div class="form-group">
                         <label>Class </label>
-                        <select class="custom-select">
+                        <select class="custom-select" id="class"> 
                         <option value="Nursery">Nursery</option>
                           <option value="LKG">LKG</option>
                           <option value="UKG">UKG</option>
@@ -85,7 +85,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </div>
                   <div class="form-group">
                     <label for="address">Section</label>
-                    <input type="text" class="form-control" id="address" value="A">
+                    <input type="text" class="form-control" id="section" value="A">
                   </div>
                   <!-- <div class="form-group">
                         <label>Select Class Incharge</label>
@@ -99,7 +99,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Create Class</button>
+                  <button type="submit" class="btn btn-primary" id="btn_create_class">Create Class</button>
                 </div>
               </form>
             </div>
@@ -174,6 +174,26 @@ scratch. This page gets rid of all links and provides the needed markup only.
       "responsive": true,
     });
   });
+</script>
+<script>
+  $("#btn_create_class").on("click",(e)=>{
+  e.preventDefault();
+  const class_title = $("#class").val();
+  const class_section = $("#section").val();
+  const data = {
+  class_title: class_title,
+  class_section: class_section
+}
+$.ajax({
+url:"api/classes/add.php",
+method: "POST",
+data:JSON.stringify(data),
+contentType: "application/json",
+dataType: "json",
+})
+// alert();
+})
+
 </script>
 </body>
 </html>

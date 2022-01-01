@@ -1,0 +1,132 @@
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"class_title":2,
+	"class_section": "A"
+	
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"class_title":2,
+	"class_section": "A"
+	
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"class_title":2,
+	"class_section": "A"
+	
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"class_title":2,
+	"class_section": "A"
+	
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"class_title":2,
+	"class_section": "A"
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"class_title":2,
+	"class_section": "A"
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"class_title":2,
+	"class_section": "A"
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"class_title":2
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"class_title":2
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"class_title":2
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"class_title":2
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"class_title":2
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"class_title":2
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"class_title":2
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"class_title":2,
+	"class_section":"A"
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"class_title":2,
+	"class_section":"A"
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"class_title":2,
+	"class_section":"A"
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"class_title":2,
+	"class_section":"A"
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"class_title":2,
+	"class_section":"A"
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"class_title":2,
+	"class_section":"A"
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"cLass_title":2,
+	"class_section":"A"
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"cLass_title":2,
+	"class_section":"A"
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"cLass_title":2,
+	"cLass_section":"A"
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"cLass_title":2,
+	"cLass_section":"A"
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"cLass_title":2,
+	"cLass_section":"A"
+}
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"cLass_title":2,
+	"cLass_section":"A"
+}

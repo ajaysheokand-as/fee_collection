@@ -86,7 +86,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </li>
                 </ul>
 
-                <a href="#" class="btn btn-primary btn-block"><b>Pay Fee</b></a>
+                <a href="invoice.php" class="btn btn-primary btn-block"><b>Pay Fee</b></a>
               </div>
               <!-- /.card-body -->
             </div>

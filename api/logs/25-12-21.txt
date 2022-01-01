@@ -1,0 +1,28 @@
+C:\xampp\htdocs\FeeCollection\api\Classes/add.php,{
+	
+	"cLass_title":2,
+	"cLass_section":"A"
+}
+C:\xampp\htdocs\FeeCollection\api\Students/add.php,
+C:\xampp\htdocs\FeeCollection\api\Students/add.php,{
+	
+	"student_name":"Mohit 34",
+	"student_father_name":"Surender Sharma",
+	"student_admissiion_no":"000001",
+	"student_gender":"Male",
+	"student_class_id":"1",
+	"student_address":"Jind",
+	"student_mobile":"123456789"
+	
+}
+C:\xampp\htdocs\FeeCollection\api\Students/add.php,{
+	
+	"student_name":"Mohit 34",
+	"student_father_name":"Surender Sharma",
+	"student_admissiion_no":"000001",
+	"student_gender":"Male",
+	"student_class_id":"1",
+	"student_address":"Jind",
+	"student_mobile":"123456789"
+	
+}
