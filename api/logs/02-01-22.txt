@@ -12,3 +12,67 @@
 /Applications/XAMPP/xamppfiles/htdocs/FeeCollection/api/students/add.php,{"student_name":"Subham","student_father_name":"sss","student_admissiion_no":"101","student_gender":"Male","student_class_id":"1st","student_address":"subham@gmail.com","student_mobile":"1234567890"}
 /Applications/XAMPP/xamppfiles/htdocs/FeeCollection/api/students/add.php,{"student_name":"Subham","student_father_name":"sss","student_admissiion_no":"101","student_gender":"Male","student_class_id":"1st","student_address":"subham@gmail.com","student_mobile":"1234567890"}
 /Applications/XAMPP/xamppfiles/htdocs/FeeCollection/api/students/add.php,{"student_name":"qwe","student_father_name":"ert","student_admissiion_no":"17","student_gender":"Male","student_class_id":"1","student_address":"dfghjk@gmail.com","student_mobile":"1234567890"}
+/Applications/XAMPP/xamppfiles/htdocs/FeeCollection/api/fee_structure/add.php,
+/Applications/XAMPP/xamppfiles/htdocs/FeeCollection/api/fee_structure/add.php,
+/Applications/XAMPP/xamppfiles/htdocs/FeeCollection/api/fee_structure/add.php,
+/Applications/XAMPP/xamppfiles/htdocs/FeeCollection/api/fee_structure/add.php,
+/Applications/XAMPP/xamppfiles/htdocs/FeeCollection/api/fee_structure/add.php,{
+	"class": "Abc",
+	"title": "All",
+	"amount": "1000"
+}
+/Applications/XAMPP/xamppfiles/htdocs/FeeCollection/api/fee_structure/add.php,{
+	"class": "Abc",
+	"title": "All",
+	"amount": "1000"
+}
+/Applications/XAMPP/xamppfiles/htdocs/FeeCollection/api/fee_structure/add.php,{
+	"class": "Abc",
+	"title": "All",
+	"amount": "1000"
+}
+/Applications/XAMPP/xamppfiles/htdocs/FeeCollection/api/fee_structure/add.php,{
+	"class": "Abc",
+	"title": "All",
+	"amount": "1000"
+}
+/Applications/XAMPP/xamppfiles/htdocs/FeeCollection/api/fee_structure/add.php,{
+	"class": "Abc",
+	"title": "All",
+	"amount": "1000"
+}
+/Applications/XAMPP/xamppfiles/htdocs/FeeCollection/api/fee_structure/add.php,{
+	"class": "Abc",
+	"title": "All",
+	"amount": "1000"
+}
+/Applications/XAMPP/xamppfiles/htdocs/FeeCollection/api/fee_structure/add.php,{
+	"class": "Abc",
+	"title": "All",
+	"amount": "1000"
+}
+/Applications/XAMPP/xamppfiles/htdocs/FeeCollection/api/fee_structure/add.php,{
+	"class": "Abc",
+	"title": "All",
+	"amount": "1000"
+}
+/Applications/XAMPP/xamppfiles/htdocs/FeeCollection/api/fee_structure/add.php,{
+	"class": "Abc",
+	"title": "All",
+	"amount": "1000"
+}
+/Applications/XAMPP/xamppfiles/htdocs/FeeCollection/api/fee_structure/add.php,{
+	"class": "Abc",
+	"title": "All",
+	"amount": "1000"
+}
+/Applications/XAMPP/xamppfiles/htdocs/FeeCollection/api/fee_structure/add.php,{
+	"class": "Abc",
+	"title": "All",
+	"amount": "1000"
+}
+/Applications/XAMPP/xamppfiles/htdocs/FeeCollection/api/fee_structure/add.php,{
+	"class": "Abc",
+	"title": "All",
+	"amount": "1000"
+}
