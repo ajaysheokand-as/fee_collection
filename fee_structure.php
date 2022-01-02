@@ -62,7 +62,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="card-body">
                   <div class="form-group">
                         <label>Select Class</label>
-                        <select class="custom-select">
+                        <select class="custom-select" id="fee_class">
                           <option value="Common">All Classes</option>
                           <option>1</option>
                           <option>2</option>

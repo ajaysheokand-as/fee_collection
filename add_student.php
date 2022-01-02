@@ -74,19 +74,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </div>
                   <div class="form-group">
                         <label>Select Gender</label>
-                        <select class="custom-select">
+                        <select class="custom-select" id="gender">
                           <option>Male</option>
                           <option>Female</option>
                         </select>
                   </div>
                   <div class="form-group">
                         <label>Select Class</label>
-                        <select class="custom-select">
-                          <option>1st</option>
-                          <option>2nd</option>
-                          <option>3rd</option>
-                          <option>4th</option>
-                          <option>5th</option>
+                        <select class="custom-select" id="class">
+                          <option value="1">1st</option>
+                          <option value="1">2nd</option>
+                          <option value="1">3rd</option>
+                          <option value="1">4th</option>
+                          <option value="1">5th</option>
                         </select>
                   </div>
                   <!-- <div class="form-group">
@@ -112,7 +112,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Add Student</button>
+                  <button type="submit" class="btn btn-primary" id="btn_add_student">Add Student</button>
                 </div>
               </form>
             </div>
@@ -224,6 +224,31 @@ scratch. This page gets rid of all links and provides the needed markup only.
       "responsive": true,
     });
   });
+</script>
+<script>
+  $("#btn_add_student").on("click",(e)=>{
+  e.preventDefault();
+  // const class_title = $("#class").val();
+  // const class_section = $("#section").val();
+  const data = {
+    student_name: $("#name").val(),
+    student_father_name: $("#father_name").val(),
+    student_admissiion_no : $("#adm_no").val(),
+    student_gender : $("#gender").val(),
+    student_class_id : $("#class").val(),
+    student_address : $("#address").val(),
+    student_mobile : $("#mob_no").val()
+}
+$.ajax({
+url:"api/students/add.php",
+method: "POST",
+data:JSON.stringify(data),
+contentType: "application/json",
+dataType: "json",
+})
+// alert();
+})
+
 </script>
 </body>
 </html>
