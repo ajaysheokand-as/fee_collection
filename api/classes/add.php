@@ -23,8 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $class_title = $data['class_title'];
         $class_section = $data['class_section'];
         // $category =  filter_var($data['category'], FILTER_SANITIZE_STRING);
-        // if ($result = mysqli_query($con, "SELECT cat_name FROM `category` where cat_name = '$category' and restaurant = $restaurant")) {
-        //     if (mysqli_num_rows($result) < 1) {
+        if ($result = mysqli_query($con, "SELECT class_title, class_section FROM `class` where class_title = '$class_title' and class_section = '$class_section' ")) {
+            if (mysqli_num_rows($result) < 1) {
                 $sql = "INSERT INTO `class`(`class_title`, `class_section`) VALUES('$class_title', '$class_section')";
 
                 if ($result =  mysqli_query($con, $sql)) {
@@ -36,12 +36,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     $err = mysqli_error($con);
                 }
-        //     } else {
-        //         $err = "Category already exists";
-        //     }
-        // } else {
-        //     $err = mysqli_error($con);
-        // }
+            } else {
+                $err = "Class already exists";
+            }
+        } else {
+            $err = mysqli_error($con);
+        }
     } else {
         $err = "set key as -> `class_title` and `class_section` ";
     }

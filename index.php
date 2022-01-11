@@ -4,7 +4,7 @@ This is a starter template page. Use this page to start your new project from
 scratch. This page gets rid of all links and provides the needed markup only.
 -->
 <html lang="en">
-
+<?php require_once('api/config.php'); ?>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -107,11 +107,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <div class="container-fluid">
           <div class="row">
             <div class="col-lg-12">
-              <?php for ($i = 1; $i <= 30; $i++) { ?>
-                <a class="btn btn-app" href="class_report.php">
-                  <span class="badge bg-success">40</span>
-                  <h5><?php echo $i ?>A</h5>
-                  <!-- <i class="fas fa-users"> <?php echo $i ?> </i> -->
+            <?php
+                        
+                        $sql = "SELECT * FROM class where class_status = 1";
+                        $res = mysqli_query($con, $sql);
+                        $i=1;
+                        while ($row = mysqli_fetch_assoc($res)) {
+                           //print_r($row);
+                        ?>
+                <a class="btn btn-app" href="class_report.php?class_id=<?php echo $row['class_id']. '&class_title=' .$row['class_title']; ?>">
+                  <span class="badge bg-success">Pending Amt</span>
+                  <h5><?php echo $row['class_title']; echo " "; echo $row['class_section'];  ?></h5>
+                  
                 </a>
               <?php } ?>
             </div>

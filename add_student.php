@@ -4,6 +4,7 @@ This is a starter template page. Use this page to start your new project from
 scratch. This page gets rid of all links and provides the needed markup only.
 -->
 <html lang="en">
+<?php require_once('api/config.php'); ?>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -82,12 +83,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <div class="form-group">
                         <label>Select Class</label>
                         <select class="custom-select" id="class">
-                          <option value="1">1st</option>
-                          <option value="1">2nd</option>
-                          <option value="1">3rd</option>
-                          <option value="1">4th</option>
-                          <option value="1">5th</option>
-                        </select>
+                        <?php
+                        
+                        $sql = "SELECT * FROM class where class_status = 1";
+                        $res = mysqli_query($con, $sql);
+                        while ($row = mysqli_fetch_assoc($res)) {
+                           //print_r($row);
+                        ?>
+                          <option value="<?php echo $row['class_id']; ?>"><?php echo $row['class_title']; ?></option>
+                        <?php } ?>
+                        <!-- <option>2</option> -->
+                      </select>
                   </div>
                   <!-- <div class="form-group">
                         <label>Select Section</label>
@@ -140,16 +146,24 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </tr>
                   </thead>
                   <tbody>
-                  <?php for($i=1;$i<=50;$i++) { ?>
+                  <?php
+                        
+                        $sql = "SELECT * FROM student where student_status = 1";
+                        $res = mysqli_query($con, $sql);
+                        $i=1;
+                        while ($row = mysqli_fetch_assoc($res)) {
+                           //print_r($row);
+                        ?>
+                          
                   <tr>
-                    <td><?php echo($i); ?></td>
-                    <td>AA </td>
-                    <td>BB</td>
-                    <td>Male</td>
+                    <td><?php echo $row['student_admission_no'] ?> </td>
+                    <td><?php echo $row['student_name'] ?></td>
+                    <td><?php echo $row['student_father_name'] ?></td>
+                    <td><?php echo $row['student_gender'] ?></td>
                     <td>10th</td>
                     <td>A</td>
-                    <td>1234567890</td>
-                    <td>Narwana</td>
+                    <td><?php echo $row['student_mobile'] ?></td>
+                    <td><?php echo $row['student_address'] ?></td>
                   </tr>
                   <?php } ?>
                   </tbody>
@@ -172,14 +186,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- /.control-sidebar -->
 
   <!-- Main Footer -->
-  <footer class="main-footer">
-    <!-- To the right -->
-    <div class="float-right d-none d-sm-inline">
-      Anything you want
-    </div>
-    <!-- Default to the left -->
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
-  </footer>
+<?php include('footer.php') ?>
 </div>
 <!-- ./wrapper -->
 
@@ -233,7 +240,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   const data = {
     student_name: $("#name").val(),
     student_father_name: $("#father_name").val(),
-    student_admissiion_no : $("#adm_no").val(),
+    student_admission_no : $("#adm_no").val(),
     student_gender : $("#gender").val(),
     student_class_id : $("#class").val(),
     student_address : $("#address").val(),

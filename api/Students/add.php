@@ -19,10 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // condition to check request in json 
     // if(strpos($content_type, "application/json") !== false){
         // print_r($data);
-    if (isset($data['student_name']) && isset($data['student_father_name']) && isset($data['student_admissiion_no']) && isset($data['student_gender']) && isset($data['student_class_id']) && isset($data['student_address']) && isset($data['student_mobile']) ) {
+    if (isset($data['student_name']) && isset($data['student_father_name']) && isset($data['student_admission_no']) && isset($data['student_gender']) && isset($data['student_class_id']) && isset($data['student_address']) && isset($data['student_mobile']) ) {
         $student_name = $data['student_name'];
         $student_father_name = $data['student_father_name'];
-        $student_admissiion_no = $data['student_admissiion_no'];
+        $student_admission_no = $data['student_admission_no'];
         $student_gender = $data['student_gender'];
         $student_class_id = $data['student_class_id'];
         $student_address = $data['student_address'];
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // $category =  filter_var($data['category'], FILTER_SANITIZE_STRING);
         // if ($result = mysqli_query($con, "SELECT cat_name FROM `category` where cat_name = '$category' and restaurant = $restaurant")) {
         //     if (mysqli_num_rows($result) < 1) {
-                $sql = "INSERT INTO `student`(`student_name`, `student_father_name`, `student_admissiion_no`, `student_gender`, `student_class_id`, `student_address`, `student_mobile`) VALUES ('$student_name', '$student_father_name', '$student_admissiion_no', '$student_gender', '$student_class_id', '$student_address', '$student_mobile')";
+                $sql = "INSERT INTO `student`(`student_name`, `student_father_name`, `student_admission_no`, `student_gender`, `student_class_id`, `student_address`, `student_mobile`) VALUES ('$student_name', '$student_father_name', '$student_admission_no', '$student_gender', '$student_class_id', '$student_address', '$student_mobile')";
 
                 if ($result =  mysqli_query($con, $sql)) {
 
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         //     $err = mysqli_error($con);
         // }
     } else {
-        $err = "set key as -> `class_title` and `class_section` ";
+        $err = "set key as -> `student_name`, `student_father_name`, `student_admission_no`, `student_gender`, `student_class_id`, `student_address`, `student_mobile`";
     }
   
 } else {

@@ -24,9 +24,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $title = $data['title'];
         $amount = $data['amount'];
         // $category =  filter_var($data['category'], FILTER_SANITIZE_STRING);
-        // if ($result = mysqli_query($con, "SELECT cat_name FROM `category` where cat_name = '$category' and restaurant = $restaurant")) {
-        //     if (mysqli_num_rows($result) < 1) {
-                $sql = "INSERT INTO `fee_strucutre`(`class`, `title`, `amount`) VALUES  ('$class','$title','$amount')";
+         $query = "SELECT class, title, amount FROM `fee_structure` where class = '$class' and title = '$title' and amount = '$amount' ";
+        if ($result = mysqli_query($con, $query)) {
+            if (mysqli_num_rows($result) < 1) {
+                $sql = "INSERT INTO `fee_structure`(`class`, `title`, `amount`) VALUES  ('$class','$title','$amount')";
 
                 if ($result =  mysqli_query($con, $sql)) {
 
@@ -37,14 +38,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     $err = mysqli_error($con);
                 }
-        //     } else {
-        //         $err = "Category already exists";
-        //     }
-        // } else {
-        //     $err = mysqli_error($con);
-        // }
+            } else {
+                $err = "Already Exists";
+            }
+        } else {
+            $err = mysqli_error($con);
+        }
     } else {
-        $err = "set key as -> `class_title` and `class_section` ";
+        $err = "set key as -> `class` `title` and `amount` ";
     }
   
 } else {

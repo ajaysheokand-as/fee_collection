@@ -65,13 +65,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <div class="card-body">
                     <div class="form-group">
                       <label>Select Class</label>
-                      <select class="custom-select" id="fee_class">
+                      <select class="custom-select" id="class">
                         <option value="Common">All Classes</option>
                         <?php
+                        
                         $sql = "SELECT * FROM class where class_status = 1";
                         $res = mysqli_query($con, $sql);
                         while ($row = mysqli_fetch_assoc($res)) {
-                          // print_r($row);
+                           //print_r($row);
                         ?>
                           <option value="<?php echo $row['class_id']; ?>"><?php echo $row['class_title']; ?></option>
                         <?php } ?>
@@ -90,7 +91,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <!-- /.card-body -->
 
                   <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary" id="btn_fee_structure">Submit</button>
                   </div>
                 </form>
               </div>
@@ -111,18 +112,24 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <th>Title</th>
                         <th>Amount</th>
                         <th>Classes</th>
-                        <th>Action</th>
+                        <!-- <th>Action</th> -->
 
                       </tr>
                     </thead>
                     <tbody>
-                      <?php for ($i = 1; $i <= 10; $i++) { ?>
+                    <?php
+                        $i=1;
+                        $sql = "SELECT * FROM fee_structure where fs_status = 1";
+                        $res = mysqli_query($con, $sql);
+                        while ($row = mysqli_fetch_assoc($res)) {
+                           //print_r($row);
+                        ?>
                         <tr>
                           <td><?php echo ($i); ?></td>
-                          <td>1000 </td>
-                          <td>800</td>
-                          <td>200</td>
-                          <td>100</td>
+                          <td><?php echo $row['title']; ?></td>
+                          <td><?php echo $row['amount']; ?></td>
+                          <td><?php echo $row['class']; ?></td>
+                          <!-- <td>100</td> -->
 
                         </tr>
                       <?php } ?>
@@ -142,14 +149,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- /.content-wrapper -->
 
     <!-- Main Footer -->
-    <footer class="main-footer">
-      <!-- To the right -->
-      <div class="float-right d-none d-sm-inline">
-        Anything you want
-      </div>
-      <!-- Default to the left -->
-      <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
-    </footer>
+    <?php include('footer.php'); ?>
   </div>
   <!-- ./wrapper -->
 
@@ -203,6 +203,43 @@ scratch. This page gets rid of all links and provides the needed markup only.
       });
     });
   </script>
+
+<script>
+  $("#btn_fee_structure").on("click",(e)=>{
+  e.preventDefault();
+  // const class_title = $("#class").val();
+  // const class_section = $("#section").val();
+  const data = {
+    class : $("#class").val(),
+    title: $("#title").val(),
+    amount: $("#amount").val(),
+   
+}
+$.ajax({
+url:"api/fee_structure/add.php",
+method: "POST",
+data:JSON.stringify(data),
+contentType: "application/json",
+dataType: "json",
+success: function(result) {
+          console.log(result.success);
+          const json = result;
+          if (json.success) {
+            swal("Good Job", "Added Successfully ", "success");
+          } else swal({
+            title: "Error Occured",
+            text: json.error,
+            icon: "error"
+          });
+          // console.info(json.success);
+          // $(e).html(text);
+        },
+})
+// alert();
+})
+
+</script>
+
 </body>
 
 </html>
