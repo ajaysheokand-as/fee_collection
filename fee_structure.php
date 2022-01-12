@@ -87,6 +87,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <label for="amount">Amount</label>
                       <input type="number" class="form-control" id="amount" value=0>
                     </div>
+                    <div class="form-group">
+                      <label>Type </label>
+                      <select class="custom-select" id="fund_type">
+                        <option value="Monthly">Monthly</option>
+                        <option value="Annual">Annual</option>
+                      </select>
+                    </div>
                   </div>
                   <!-- /.card-body -->
 
@@ -111,6 +118,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <th>S.No.</th>
                         <th>Title</th>
                         <th>Amount</th>
+                        <th>Type</th>
                         <th>Classes</th>
                         <!-- <th>Action</th> -->
 
@@ -125,9 +133,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                            //print_r($row);
                         ?>
                         <tr>
-                          <td><?php echo ($i); ?></td>
+                          <td><?php echo ($i++); ?></td>
                           <td><?php echo $row['title']; ?></td>
                           <td><?php echo $row['amount']; ?></td>
+                          <td><?php echo $row['fund_type']; ?></td>
                           <td><?php echo $row['class']; ?></td>
                           <!-- <td>100</td> -->
 
@@ -213,7 +222,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     class : $("#class").val(),
     title: $("#title").val(),
     amount: $("#amount").val(),
-   
+    fund_type: $('#fund_type').val(),
 }
 $.ajax({
 url:"api/fee_structure/add.php",

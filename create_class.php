@@ -89,13 +89,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <label for="address">Section</label>
                       <input type="text" class="form-control" id="section" value="A">
                     </div>
-                    <!-- <div class="form-group">
-                        <label>Select Class Incharge</label>
-                        <select class="custom-select">
-                          <option>Teacher 1</option>
-                          <option>Teacher 2</option>
-                        </select>
-                  </div> -->
 
                   </div>
                   <!-- /.card-body -->
@@ -117,13 +110,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
               while ($row = mysqli_fetch_assoc($res)) {
                 //print_r($row);
               ?>
-                <a class="btn btn-app" href="class_report.php">
+                <a class="btn btn-app" href="class_report.php?class_id=<?php echo $row['class_id']. '&class_title=' .$row['class_title']; ?>">
                   <span class="badge bg-success">Total Stu</span>
                   <h5><?php echo $row['class_title'];
                       echo " ";
                       echo $row['class_section'];  ?></h5>
-                  <!-- <i class="fas fa-users"> <?php echo $i;
-                                                $i++; ?> </i> -->
+                  <!-- <i class="fas fa-users">  </i> -->
                 </a>
               <?php } ?>
             </div>
@@ -145,8 +137,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   </div>
   <!-- ./wrapper -->
 
-  <!-- Sweetalert2 -->
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  
 
   <!-- REQUIRED SCRIPTS -->
 

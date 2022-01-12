@@ -4,7 +4,21 @@ This is a starter template page. Use this page to start your new project from
 scratch. This page gets rid of all links and provides the needed markup only.
 -->
 <html lang="en">
+<?php 
+require_once('api/config.php');
+require_once('function.php');
+if(isset($_GET['student_adm_no']) && isset($_GET['class_id'])){
+  $adm_no = $_GET['student_adm_no'];
+  $class_id = $_GET['class_id'];
 
+}
+$recepit_no = "SELECT receipt_no FROM student_fee_record ORDER BY receipt_no DESC LIMIT 1";
+$res_rec_no = mysqli_query($con,$recepit_no);
+// print_r($res_rec_no);
+$query = "SELECT * FROM student as s, class as c WHERE s.student_admission_no = '$adm_no' AND c.class_id = '$class_id' ";
+  $res = mysqli_query($con, $query);
+  // print_r($res);
+?>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -52,25 +66,29 @@ scratch. This page gets rid of all links and provides the needed markup only.
       </div>
       <!-- /.content-header -->
       <!-- Main content -->
+      <?php 
+        while ($row = mysqli_fetch_assoc($res)) {
+          //print_r($row);
+        ?>
       <div class="content">
-        <div class="container-fluid">
+        <div class="container">
         <div class="row">
           <div class="col-12">
             <!-- Main content -->
             <div class="invoice p-3 mb-3">
               <!-- title row -->
               <div class="row">
-                <div class="col-12">
+                <div class="col-6">
                   <h4>
-                  <i class="fas fa-file-invoice"></i> Slip No. 2345
-                    <small class="float-right">Date: 2/10/2014</small>
+                  <i class="fas fa-file-invoice"></i> Receipt No. <span id="receipt_no"> <?php while ($rcpt = mysqli_fetch_assoc($res_rec_no)) { echo $rcpt['receipt_no']+1; }?> </span>
+                    <small class="float-right"> Date: <?php $date=date('d-m-Y'); echo $date; ?></small>
                   </h4>
                 </div>
                 <!-- /.col -->
               </div>
               <!-- info row -->
               <div class="row invoice-info">
-                <div class="col-sm-4 invoice-col">
+                <div class="col-sm-5 invoice-col">
                   From
                   <address>
                     <strong>St. Mary's Convent School</strong><br>
@@ -83,10 +101,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="col-sm-4 invoice-col">
                   To
                   <address>
-                    <strong>Student Name</strong><br>
-                    F.Name: .....<br>
-                    Class : 10th<br>
-                    Adm. No.: 123456<br>
+                    <strong><?php echo $row['student_name']; ?></strong><br>
+                    F.Name: <?php echo $row['student_father_name']; ?><br>
+                    Class : <?php echo $row['class_title']; ?><br>
+                    Adm. No.: <?php echo $row['student_admission_no']; ?><br>
                   </address>
                 </div>
                 <!-- /.col -->
@@ -99,7 +117,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <!-- /.col -->
               </div>
               <!-- /.row -->
-
+             
               <!-- Table row -->
               <div class="row">
                 <div class="col-12 table-responsive">
@@ -109,16 +127,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <th>S.No.</th>
                       <th>Particulars</th>
                       <th>Amount</th>
-                      <th>Concession</th>
+                      <!-- <th>Concession</th> -->
                     </tr>
                     </thead>
                     <tbody>
-                        <?php for($i=1;$i<=4;$i++) { ?>
+                    <?php
+                        $i=1;
+                        $total_amount = 0;
+                        $total_month = cal_month('2021-06-05')+1;
+                        $sql = "SELECT title, amount FROM fee_structure where class = '$class_id' ";
+                        $result = mysqli_query($con, $sql);
+                        while ($row_fs = mysqli_fetch_assoc($result)) {
+                           //print_r($row);
+                           $total_amount += $row_fs['amount'];
+                        ?>
                     <tr>
-                      <td><?php echo $i ?></td>
-                      <td>Tution Fee</td>
-                      <td>2164.50</td>
-                      <td>00</td>
+                      <td><?php echo $i++ ?></td>
+                      <td><?php echo $row_fs['title']; ?></td>
+                      <td id="fee_amount"><?php echo $row_fs['amount']; ?></td>
+                      <!-- <td>00</td> -->
                     </tr>
                     <?php } ?>
                     </tbody>
@@ -138,21 +165,30 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                   <div class="table-responsive">
                     <table class="table">
-                      <tbody><tr>
-                        <th style="width:50%">Subtotal:</th>
-                        <td>23250.30</td>
+                      <tbody>
+                      <tr>
+                        <th style="width:50%" >Monthly Fee:</th>
+                        <td id="monthly_fee"><?php  echo $total_amount ;  ?></td>
+                      </tr>
+                        <tr>
+                        <th style="width:50%" >Subtotal:</th>
+                        <td id="subtotal"><?php  echo $total_amount = $total_amount * cal_month() ;  ?></td>
+                      </tr>
+                      <tr>
+                        <th>Change Duration</th>
+                        <td ><input type="date" id="end_date" ></td>
                       </tr>
                       <tr>
                         <th>Concession</th>
-                        <td>00</td>
+                        <td ><input type="number" id="concession" value=0 min=0 max=<?php echo $total_amount; ?>></td>
                       </tr>
                       <tr>
                         <th>Fee Paid</th>
-                        <td>32465.80</td>
+                        <td id="fee_paid"><?php echo $total_amount; ?></td>
                       </tr>
                       <tr>
                         <th>Fee Month</th>
-                        <td>Jan-Mar</td>
+                        <td id="month"> <?php echo month_name();?> - <span id ="end_month_name"> <?php echo month_name('2021-12-12') ?> </span> (Month - <span id="month_no"><?php echo cal_month(); ?></span>) </td>
                       </tr>
                     </tbody></table>
                   </div>
@@ -165,8 +201,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <div class="row no-print">
                 <div class="col-12">
                   <a href="#" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
-                  <button type="button" class="btn btn-success float-right"><i class="far fa-credit-card"></i> Pay Cash </button>
-                  <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
+                  <button type="button" class="btn btn-success float-right" id="cash_payment"><i class="far fa-credit-card"></i> Pay Cash </button>
+                  <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;" id="online_payment">
                     <i class="fas fa-credit-card"></i> Pay Online
                   </button>
                 </div>
@@ -177,6 +213,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
         </div><!-- /.container-fluid -->
       </div>
+      <?php }?>
       <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
@@ -231,6 +268,101 @@ scratch. This page gets rid of all links and provides the needed markup only.
       });
     });
   </script>
+
+  <script>
+
+function get_date(start_date, end_date){
+        $.ajax({
+        url: "api/date/get_month_diff.php",
+        method: "POST",
+        data: JSON.stringify({start_date : start_date, end_date: end_date} ),
+        contentType: "application/json",
+        dataType: "json",
+        success: function(result) {
+          console.log(result);
+          const json = result;
+          if (json.success) {
+            // swal("Good Job", " Class Added", "success");
+            $('#end_month_name').html(json.data.end_month);
+            $('#month_no').html(json.data.month_diff);
+            // const total_fee = ;
+            // cal_fee(total_fee,json.data.month_diff);
+          } else swal({
+            title: "Error Occured",
+            text: json.error,
+            icon: "error"
+          });
+          // console.info(json.success);
+          // $(e).html(text);
+        },
+      })
+      }
+
+function cal_fee(fee, months){
+  const total_fee = fee*months;
+  $('#subtotal, #fee_paid').html(total_fee);
+}
+
+$('#concession').on('input',()=>{
+  let concession = $('#concession').val();
+  let sub_total = <?php echo $total_amount; ?>;
+  let fee_paid = sub_total - concession;
+  $('#fee_paid').html(fee_paid); 
+
+})
+
+$('#end_date').on('change',()=>{
+  // console.log($('#end_date').val());
+  get_date('2021-03-01',$('#end_date').val());
+  
+
+})
+</script>
+
+<script>
+    $("#cash_payment").on("click", (e) => {
+      e.preventDefault();
+      const student_adm_no = <?php echo $adm_no; ?>;
+      const receipt_no = $("#receipt_no").html();
+      const subtotal = $("#subtotal").html();
+      const concession = $("#concesion").val();
+      const fee_paid = $("#fee_paid").html();
+      const month = $("#month_no").html();
+      const mode = "Cash";
+      const data = {
+        student_adm_no : student_adm_no,
+        receipt_no: receipt_no,
+        subtotal: subtotal,
+        concession: 0,
+        fee_paid: fee_paid,
+        month: month,
+        mode: mode,
+      }
+      $.ajax({
+        url: "api/fee_record/add.php",
+        method: "POST",
+        data: JSON.stringify(data),
+        contentType: "application/json",
+        dataType: "json",
+        success: function(result) {
+          console.log(result.success);
+          const json = result;
+          if (json.success) {
+            swal("Good Job", " Fee Submitted Successfully", "success");
+          } else swal({
+            title: "Error Occured",
+            text: json.error,
+            icon: "error"
+          });
+          // console.info(json.success);
+          // $(e).html(text);
+        },
+      })
+      // alert();
+      // location.reload();
+    })
+  </script>
+
 </body>
 
 </html>

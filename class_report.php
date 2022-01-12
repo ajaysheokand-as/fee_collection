@@ -5,24 +5,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
 -->
 <html lang="en">
 <?php require_once('api/config.php'); 
+ require_once('function.php');
+
 if(isset($_GET['class_id']))
 {
   $class_id = $_GET['class_id'];
 }
-$adm_date = '2021-03-01';
-$cureent_date = date('Y-m-d');
 
-$ts1 = strtotime($adm_date);
-$ts2 = strtotime($cureent_date);
-
-$year1 = date('Y', $ts1);
-$year2 = date('Y', $ts2);
-
-$month1 = date('m', $ts1);
-$month2 = date('m', $ts2);
-
-$diff = (($year2 - $year1) * 12) + ($month2 - $month1);
-// echo $diff;
 ?>
 <head>
   <meta charset="utf-8">
@@ -88,7 +77,7 @@ $diff = (($year2 - $year1) * 12) + ($month2 - $month1);
 
                   <ul class="list-group list-group-unbordered mb-3">
                     <li class="list-group-item">
-                      <b>Incharge</b> <a class="float-right">1,322</a>
+                      <b>Admission Fee</b> <a class="float-right">20000</a>
                     </li>
                     <li class="list-group-item">
                       <b>Total Students</b> <a class="float-right">543</a>
@@ -97,7 +86,7 @@ $diff = (($year2 - $year1) * 12) + ($month2 - $month1);
                       <b>Total Fee</b> <a class="float-right">13,28700</a>
                     </li>
                     <li class="list-group-item">
-                      <b>Total Credit</b> <a class="float-right">13,2870</a>
+                      <b>Total Paid</b> <a class="float-right">13,2870</a>
                     </li>
                     <li class="list-group-item">
                       <b>Total Balance</b> <a class="float-right">13,2087</a>
@@ -152,10 +141,10 @@ $diff = (($year2 - $year1) * 12) + ($month2 - $month1);
                           $monthly_fee = mysqli_fetch_assoc($result)['amount'];
                           echo $monthly_fee;
                           ?></td>
-                          <td><?php echo ($monthly_fee* ($diff + 1) ) ?></td>
+                          <td><?php echo ($monthly_fee* (cal_month() + 1) ) ?></td>
                           <td><?php echo ("Pending") ?></td>
                           <td><?php echo ("Pending") ?></td>
-                          <td><a href="stud_report.php"><i class="fab fa-paypal">Pay</i></a></td>
+                          <td><a href="stud_report.php?student_admission_no=<?php echo $row['student_admission_no']. '&stu_name=' . $row['student_name']. '&class_id=' .$class_id ; ?>"><i class="fab fa-paypal">Pay</i></a></td>
                         </tr>
                       <?php } ?>
                     </tbody>

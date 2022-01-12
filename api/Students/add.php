@@ -28,8 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $student_address = $data['student_address'];
         $student_mobile = $data['student_mobile'];
         // $category =  filter_var($data['category'], FILTER_SANITIZE_STRING);
-        // if ($result = mysqli_query($con, "SELECT cat_name FROM `category` where cat_name = '$category' and restaurant = $restaurant")) {
-        //     if (mysqli_num_rows($result) < 1) {
+        if ($result = mysqli_query($con, "SELECT student_admission_no FROM `student` where student_admission_no = '$student_admission_no' ")) {
+            if (mysqli_num_rows($result) < 1) {
                 $sql = "INSERT INTO `student`(`student_name`, `student_father_name`, `student_admission_no`, `student_gender`, `student_class_id`, `student_address`, `student_mobile`) VALUES ('$student_name', '$student_father_name', '$student_admission_no', '$student_gender', '$student_class_id', '$student_address', '$student_mobile')";
 
                 if ($result =  mysqli_query($con, $sql)) {
@@ -41,12 +41,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     $err = mysqli_error($con);
                 }
-        //     } else {
-        //         $err = "Category already exists";
-        //     }
-        // } else {
-        //     $err = mysqli_error($con);
-        // }
+            } else {
+                $err = "Student already exist";
+            }
+        } else {
+            $err = mysqli_error($con);
+        }
     } else {
         $err = "set key as -> `student_name`, `student_father_name`, `student_admission_no`, `student_gender`, `student_class_id`, `student_address`, `student_mobile`";
     }

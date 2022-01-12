@@ -4,6 +4,19 @@ This is a starter template page. Use this page to start your new project from
 scratch. This page gets rid of all links and provides the needed markup only.
 -->
 <html lang="en">
+  <?php require_once('api/config.php'); 
+  
+  if(isset($_GET['student_admission_no']) && isset($_GET['class_id'])){
+    $adm_no = $_GET['student_admission_no'];
+    $class_id = $_GET['class_id'];
+  }
+  $fee_rec = "SELECT * FROM `student_fee_record` WHERE student_adm_no= '$adm_no' ";
+  $res_fee_rec = mysqli_query($con,$fee_rec);
+
+  $query = "SELECT * FROM student as s, class as c WHERE s.student_admission_no = '$adm_no' AND c.class_id = '$class_id' ";
+  $res = mysqli_query($con, $query);
+  
+  ?>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -55,28 +68,32 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <div class="container-fluid">
         <div class="row">
           <div class="col-lg-3">
+            <?php
+          while ($row = mysqli_fetch_assoc($res)) {
+                // print_r($row);
+              ?>
           <div class="card card-primary card-outline">
               <div class="card-body box-profile">
                 <!-- <div class="text-center">
                   <img class="profile-user-img img-fluid img-circle" src="dist/img/user4-128x128.jpg" alt="User profile picture">
                 </div> -->
 
-                <h2 class=" text-center">Student Name</h2>
+                <h2 class=" text-center"><?php echo $row['student_name']; ?></h2>
 
                 <!-- <p class="text-muted text-center">Teacher 1</p> -->
 
                 <ul class="list-group list-group-unbordered mb-3">
                   <li class="list-group-item">
-                    <b>Class</b> <a class="float-right">1,322</a>
+                    <b>Class</b> <a class="float-right"><?php echo $row['class_title']; ?></a>
                   </li>
                   <li class="list-group-item">
-                    <b>Father Name</b> <a class="float-right">543</a>
+                    <b>Father Name</b> <a class="float-right"><?php echo $row['student_father_name']; ?></a>
                   </li>
                   <li class="list-group-item">
-                    <b>Address</b> <a class="float-right">13,28700</a>
+                    <b>Address</b> <a class="float-right"><?php echo $row['student_address']; ?></a>
                   </li>
                   <li class="list-group-item">
-                    <b>Contact No.</b> <a class="float-right">13,2870</a>
+                    <b>Contact No.</b> <a class="float-right"><?php echo $row['student_mobile']; ?></a>
                   </li>
                   <li class="list-group-item">
                     <b>Total Credit</b> <a class="float-right">13,2087</a>
@@ -86,12 +103,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </li>
                 </ul>
 
-                <a href="invoice.php" class="btn btn-primary btn-block"><b>Pay Fee</b></a>
+                <a href="invoice.php?student_adm_no=<?php echo $row['student_admission_no']. '&class_id=' .$row['class_id'] ?>" class="btn btn-primary btn-block"><b>Pay Fee</b></a>
               </div>
               <!-- /.card-body -->
             </div>
 
           </div>
+
+          <?php } ?>
           <!-- /.col-md-6 -->
           <div class="col-lg-9">
           <div class="card">
@@ -103,27 +122,32 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <table id="example1" class="table table-bordered table-striped">
                   <thead>
                   <tr>
-                    <th>Transaction Id</th>
+                    <th>Receipt No.</th>
                     <th>Date</th>
-                    <th>Duration</th>
+                    <th>Month</th>
                     <th>Amount</th>
-                    <th>Mode</th>
-                    <!-- <th>Paid</th>
+                    <th>Concession</th>
+                    <th>Amount Paid</th>
                     <th>Balance</th>
-                    <th>Action</th> -->
+                    <th>Mode</th>
+                    <!-- <th>Action</th> -->
                   </tr>
                   </thead>
                   <tbody>
-                      <?php for($i=1;$i<=50;$i++) { ?>
+                  <?php
+          while ($rec_row = mysqli_fetch_assoc($res_fee_rec)) {
+                // print_r($row);
+              ?>
                   <tr>
-                    <td><?php echo($i) ?></td>
-                    <td>AA </td>
-                    <td>BB</td>
-                    <td>1234567890</td>
-                    <td>10000</td>
-                    <!-- <td>5000</td>
-                    <td>5000</td>
-                    <td ><a href="#" ><i class="fab fa-paypal">Pay</i></a></td> -->
+                    <td><?php echo $rec_row['receipt_no']; ?> </td>
+                    <td><?php echo $rec_row['date']; ?> </td>
+                    <td>March-June</td>
+                    <td><?php echo $rec_row['amount']; ?></td>
+                    <td><?php echo $rec_row['concession']; ?></td>
+                    <td><?php echo $rec_row['fee_paid']; ?></td>
+                    <td><?php echo $rec_row['balance']; ?></td>
+                    <td>Cash</td>
+                   <!--  <td ><a href="#" ><i class="fab fa-paypal">Pay</i></a></td> -->
                   </tr>
                   <?php } ?>
                   </tbody>
