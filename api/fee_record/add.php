@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // print_r($data);
     if (isset($data['student_adm_no']) && isset($data['receipt_no']) && isset($data['receipt_no']) && isset($data['concession']) && isset($data['fee_paid']) && isset($data['month']) && isset($data['mode']) ) {
         $student_adm_no = $data['student_adm_no'];
-        $receipt_no = $data['receipt_no'];
+        $receipt_no = !empty($data['receipt_no'])?$data['receipt_no']:1;
         $subtotal = $data['subtotal'];
         $concession = $data['concession'];
         $fee_paid = $data['fee_paid'];

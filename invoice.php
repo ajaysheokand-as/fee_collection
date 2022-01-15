@@ -80,7 +80,9 @@ $query = "SELECT * FROM student as s, class as c WHERE s.student_admission_no = 
               <div class="row">
                 <div class="col-6">
                   <h4>
-                  <i class="fas fa-file-invoice"></i> Receipt No. <span id="receipt_no"> <?php while ($rcpt = mysqli_fetch_assoc($res_rec_no)) { echo $rcpt['receipt_no']+1; }?> </span>
+                  <i class="fas fa-file-invoice"></i> Receipt No. <span id="receipt_no"> <?php 
+                  if(mysqli_num_rows($res_rec_no)<1) echo $r_no = 1; else 
+                  echo $r_no = mysqli_fetch_assoc($res_rec_no)['receipt_no'] + 1; ?> </span>
                     <small class="float-right"> Date: <?php $date=date('d-m-Y'); echo $date; ?></small>
                   </h4>
                 </div>
