@@ -4,7 +4,11 @@ This is a starter template page. Use this page to start your new project from
 scratch. This page gets rid of all links and provides the needed markup only.
 -->
 <html lang="en">
-<?php require_once('api/config.php'); ?>
+<?php require_once('api/config.php'); 
+
+$query = "SELECT SUM(fee_paid) as all_time_collection FROM `student_fee_record`";
+$res = mysqli_query($con,$query);
+?>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -39,14 +43,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1 class="m-0">All Classes</h1>
+              <h1 class="m-0">ST. MARRY'S CONVENT SCHOOL NARWANA</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
                 <li class="breadcrumb-item active">Starter Page</li>
               </ol>
-            </div><!-- /.col -->
+            </div>
           </div><!-- /.row -->
         </div><!-- /.container-fluid -->
       </div>
@@ -95,7 +99,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <input type="radio" name="color_option" id="color_option_b3" autocomplete="off">
               <span class="text-lg">All Time Collection</span>
               <br>
-              00
+              <?php
+          while ($result = mysqli_fetch_assoc($res)) {
+              echo $result['all_time_collection']. ' INR';
+          }
+                // print_r($row);
+              ?>
             </label>
           </div>
         </a>

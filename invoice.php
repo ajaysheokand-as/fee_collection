@@ -135,7 +135,7 @@ $query = "SELECT * FROM student as s, class as c WHERE s.student_admission_no = 
                         $i=1;
                         $total_amount = 0;
                         $total_month = cal_month('2021-06-05')+1;
-                        $sql = "SELECT title, amount FROM fee_structure where class = '$class_id' ";
+                        $sql = "SELECT title, amount FROM fee_structure where class = '$class_id' or class = 'common' ";
                         $result = mysqli_query($con, $sql);
                         while ($row_fs = mysqli_fetch_assoc($result)) {
                            //print_r($row);
@@ -172,7 +172,7 @@ $query = "SELECT * FROM student as s, class as c WHERE s.student_admission_no = 
                       </tr>
                         <tr>
                         <th style="width:50%" >Subtotal:</th>
-                        <td id="subtotal"><?php  echo $total_amount = $total_amount * cal_month() ;  ?></td>
+                        <td id="subtotal"><?php  echo $total_amount = $total_amount * (cal_month()+1) ;  ?></td>
                       </tr>
                       <tr>
                         <th>Change Duration</th>
@@ -180,7 +180,7 @@ $query = "SELECT * FROM student as s, class as c WHERE s.student_admission_no = 
                       </tr>
                       <tr>
                         <th>Concession</th>
-                        <td ><input type="number" id="concession" value=0 min=0 max=<?php echo $total_amount; ?>></td>
+                        <td ><input type="number" id="concession" value="0" ?></td>
                       </tr>
                       <tr>
                         <th>Fee Paid</th>
@@ -188,7 +188,7 @@ $query = "SELECT * FROM student as s, class as c WHERE s.student_admission_no = 
                       </tr>
                       <tr>
                         <th>Fee Month</th>
-                        <td id="month"> <?php echo month_name();?> - <span id ="end_month_name"> <?php echo month_name('2021-12-12') ?> </span> (Month - <span id="month_no"><?php echo cal_month(); ?></span>) </td>
+                        <td id="month"> <?php echo month_name();?> - <span id ="end_month_name"> <?php echo month_name($today) ?> </span> (Month - <span id="month_no"><?php echo cal_month()+1; ?></span>) </td>
                       </tr>
                     </tbody></table>
                   </div>
@@ -285,8 +285,9 @@ function get_date(start_date, end_date){
             // swal("Good Job", " Class Added", "success");
             $('#end_month_name').html(json.data.end_month);
             $('#month_no').html(json.data.month_diff);
-            // const total_fee = ;
-            // cal_fee(total_fee,json.data.month_diff);
+            const month_no = json.data.month_diff;
+            const total_fee = $('#monthly_fee').html();
+            cal_fee(total_fee,month_no);
           } else swal({
             title: "Error Occured",
             text: json.error,
@@ -305,16 +306,15 @@ function cal_fee(fee, months){
 
 $('#concession').on('input',()=>{
   let concession = $('#concession').val();
-  let sub_total = <?php echo $total_amount; ?>;
+  let sub_total = $('#subtotal').html();
   let fee_paid = sub_total - concession;
   $('#fee_paid').html(fee_paid); 
 
 })
 
 $('#end_date').on('change',()=>{
-  // console.log($('#end_date').val());
+
   get_date('2021-03-01',$('#end_date').val());
-  
 
 })
 </script>
@@ -325,7 +325,7 @@ $('#end_date').on('change',()=>{
       const student_adm_no = <?php echo $adm_no; ?>;
       const receipt_no = $("#receipt_no").html();
       const subtotal = $("#subtotal").html();
-      const concession = $("#concesion").val();
+      const concession = $("#concession").val();
       const fee_paid = $("#fee_paid").html();
       const month = $("#month_no").html();
       const mode = "Cash";
@@ -333,7 +333,7 @@ $('#end_date').on('change',()=>{
         student_adm_no : student_adm_no,
         receipt_no: receipt_no,
         subtotal: subtotal,
-        concession: 0,
+        concession: concession,
         fee_paid: fee_paid,
         month: month,
         mode: mode,

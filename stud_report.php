@@ -10,7 +10,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
     $adm_no = $_GET['student_admission_no'];
     $class_id = $_GET['class_id'];
   }
-  $fee_rec = "SELECT * FROM `student_fee_record` WHERE student_adm_no= '$adm_no' ";
+  $total_fee_paid = "SELECT sum(fee_paid) as total_fee_credit FROM `student_fee_record` WHERE student_adm_no= '$adm_no' ";
+  $total_credit = mysqli_query($con, $total_fee_paid);
+
+  $fee_rec = "SELECT receipt_no, payment_date, months, amount, concession, fee_paid, mode FROM `student_fee_record` WHERE student_adm_no= '$adm_no' ";
   $res_fee_rec = mysqli_query($con,$fee_rec);
 
   $query = "SELECT * FROM student as s, class as c WHERE s.student_admission_no = '$adm_no' AND c.class_id = '$class_id' ";
@@ -96,7 +99,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <b>Contact No.</b> <a class="float-right"><?php echo $row['student_mobile']; ?></a>
                   </li>
                   <li class="list-group-item">
-                    <b>Total Credit</b> <a class="float-right">13,2087</a>
+                    <b>Total Credit Amt</b> <a class="float-right"> <?php
+          while ($fee_cr = mysqli_fetch_assoc($total_credit)) {
+              echo $fee_cr['total_fee_credit']. ' INR';
+          }
+                // print_r($row);
+              ?></a>
                   </li>
                   <li class="list-group-item">
                     <b>Total Balance</b> <a class="float-right">13,2087</a>
@@ -124,7 +132,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <tr>
                     <th>Receipt No.</th>
                     <th>Date</th>
-                    <th>Month</th>
+                    <th>No. of Month</th>
                     <th>Amount</th>
                     <th>Concession</th>
                     <th>Amount Paid</th>
@@ -140,13 +148,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
               ?>
                   <tr>
                     <td><?php echo $rec_row['receipt_no']; ?> </td>
-                    <td><?php echo $rec_row['date']; ?> </td>
-                    <td>March-June</td>
+                    <td><?php echo $rec_row['payment_date']; ?> </td>
+                    <td><?php echo $rec_row['months']; ?></td>
                     <td><?php echo $rec_row['amount']; ?></td>
                     <td><?php echo $rec_row['concession']; ?></td>
                     <td><?php echo $rec_row['fee_paid']; ?></td>
-                    <td><?php echo $rec_row['balance']; ?></td>
-                    <td>Cash</td>
+                    <td>avilable soon</td>
+                    <td><?php echo $rec_row['mode']; ?></td>
                    <!--  <td ><a href="#" ><i class="fab fa-paypal">Pay</i></a></td> -->
                   </tr>
                   <?php } ?>
