@@ -204,9 +204,11 @@ $query = "SELECT * FROM student as s, class as c WHERE s.student_admission_no = 
                 <div class="col-12">
                   <a href="#" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
                   <button type="button" class="btn btn-success float-right" id="cash_payment"><i class="far fa-credit-card"></i> Pay Cash </button>
-                  <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;" id="online_payment">
+            <a href="./PayU/PayU.php?adm_no=<?php echo $adm_no; ?>&recepit_no=<?php echo $r_no; ?>" >     <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;" id="online_payment">
                     <i class="fas fa-credit-card"></i> Pay Online
                   </button>
+
+                        </a>
                 </div>
               </div>
             </div>
