@@ -107,7 +107,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               ?></a>
                   </li>
                   <li class="list-group-item">
-                    <b>Total Balance</b> <a class="float-right">13,2087</a>
+                    <b>Total Balance</b> <a class="float-right">00</a>
                   </li>
                 </ul>
 
