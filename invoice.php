@@ -14,7 +14,7 @@ if (isset($_GET['student_adm_no']) && isset($_GET['class_id'])) {
 $recepit_no = "SELECT receipt_no FROM student_fee_record ORDER BY receipt_no DESC LIMIT 1";
 $res_rec_no = mysqli_query($con, $recepit_no);
 // print_r($res_rec_no);
-$query = "SELECT * FROM student as s, class as c WHERE s.student_admission_no = '$adm_no' AND c.class_id = '$class_id' ";
+$query = "SELECT * FROM student s, class c WHERE s.student_admission_no = '$adm_no' AND c.class_id = '$class_id' ";
 $res = mysqli_query($con, $query);
 // print_r($res);
 ?>
@@ -69,6 +69,8 @@ $res = mysqli_query($con, $query);
       <?php
       while ($row = mysqli_fetch_assoc($res)) {
         //print_r($row);
+        $orderid =  $adm_no . date('ymdHis');
+        $student_id =  $row['student_id'];
       ?>
         <div class="content">
           <div class="container">
@@ -207,11 +209,12 @@ $res = mysqli_query($con, $query);
                     <div class="col-12">
                       <a href="#" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
                       <button type="button" class="btn btn-success float-right" id="cash_payment"><i class="far fa-credit-card"></i> Pay Cash </button>
-                      <a href="./PayU/PayU.php?adm_no=<?php echo $adm_no; ?>&recepit_no=<?php echo $r_no; ?>"> <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;" id="online_payment">
-                          <i class="fas fa-credit-card"></i> Pay Online
-                        </button>
+                      <!-- <a href="./PayU/PayU.php?adm_no=<?php echo $adm_no; ?>&recepit_no=<?php echo $r_no; ?>"> -->
+                      <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;" id="online_payment">
+                        <i class="fas fa-credit-card"></i> Pay Online
+                      </button>
 
-                      </a>
+                      <!-- </a> -->
                     </div>
                   </div>
                 </div>
@@ -371,40 +374,55 @@ $res = mysqli_query($con, $query);
       // location.reload();
     })
   </script>
-  <script type="application/javascript" crossorigin="anonymous" src="https://securegw-stage.paytm.in/merchantpgpui/checkoutjs/merchants/OgdBig44888892307561.js" onload="onScriptLoad();"> </script>
-  <script>
-    function onScriptLoad() {
-      var config = {
-        "root": "",
-        "flow": "DEFAULT",
-        "data": {
-          "orderId": "",
-          /* update order id */
-          "token": "",
-          /* update token value */
-          "tokenType": "TXN_TOKEN",
-          "amount": "" /* update amount */
-        },
-        "handler": {
-          "notifyMerchant": function(eventName, data) {
-            console.log("notifyMerchant handler function called");
-            console.log("eventName => ", eventName);
-            console.log("data => ", data);
-          }
-        }
-      };
 
-      if (window.Paytm && window.Paytm.CheckoutJS) {
-        window.Paytm.CheckoutJS.onLoad(function excecuteAfterCompleteLoad() {
-          // initialze configuration using init method 
-          window.Paytm.CheckoutJS.init(config).then(function onSuccess() {
-            // after successfully updating configuration, invoke JS Checkout
-            window.Paytm.CheckoutJS.invoke();
-          }).catch(function onError(error) {
-            console.log("error => ", error);
-          });
-        });
-      }
+  <script>
+    $("#online_payment").on("click", (e) => {
+      e.preventDefault();
+      const mid = "OgdBig44888892307561";
+      const order_id = "";
+      const amount = 10;
+      $.ajax({
+        method: "POST",
+        url: "api/paytm/initiate.php",
+        dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify({
+          student_id: <?php echo $student_id; ?>,
+          MID: mid,
+          order_id: order_id,
+          amount: amount,
+        }),
+        success: function(response) {
+          if (response.success) {
+            res_array = ({
+              student_id: <?php echo $student_id; ?>,
+              adm_no: <?php echo $adm_no; ?>,
+              orderid: <?php echo $orderid; ?>,
+              amt: 10,
+              ...response
+            });
+            console.log(res_array);
+
+            savePaymentRequest(res_array);
+            // alert(window.location.href = `./paymentInitiate.php?mid=${mid}&orderid=${order_id}&txnToken=${response.txnToken}`);
+          } else alert(response.error)
+        }
+      });
+    });
+
+    function savePaymentRequest(data) {
+      if (data == null) return;
+      $.ajax({
+        url: './api/paytm/savePaymentRequest.php',
+        method: 'POST',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        dataType: 'json',
+        success: (res) => {
+          console.log(res);
+        }
+
+      })
     }
   </script>
 

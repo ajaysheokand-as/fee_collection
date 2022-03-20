@@ -10,134 +10,283 @@
  * @link       https://developer.paytm.com/docs/checksum/#php
  */
 
-class PaytmChecksum
+
+
+// private static $iv = "@@@@&&&&####$$$$";
+
+
+function encrypt_e($input, $ky)
+{
+    $key   = html_entity_decode($ky);
+    $iv = "@@@@&&&&####$$$$";
+    $data = openssl_encrypt($input, "AES-128-CBC", $key, 0, $iv);
+    return $data;
+}
+
+function decrypt_e($crypt, $ky)
+{
+    $key   = html_entity_decode($ky);
+    $iv = "@@@@&&&&####$$$$";
+    $data = openssl_decrypt($crypt, "AES-128-CBC", $key, 0, $iv);
+    return $data;
+}
+
+function generateSalt_e($length)
+{
+    $random = "";
+    srand((float) microtime() * 1000000);
+
+    $data = "AbcDE123IJKLMN67QRSTUVWXYZ";
+    $data .= "aBCdefghijklmn123opq45rs67tuv89wxyz";
+    $data .= "0FGH45OP89";
+
+    for ($i = 0; $i < $length; $i++) {
+        $random .= substr($data, (rand() % (strlen($data))), 1);
+    }
+
+    return $random;
+}
+
+function checkString_e($value)
+{
+    if ($value == 'null')
+        $value = '';
+    return $value;
+}
+
+function getChecksumFromArray($arrayList, $key, $sort = 1)
+{
+    if ($sort != 0) {
+        ksort($arrayList);
+    }
+    $str = getArray2Str($arrayList);
+    $salt = generateSalt_e(4);
+    $finalString = $str . "|" . $salt;
+    $hash = hash("sha256", $finalString);
+    $hashString = $hash . $salt;
+    $checksum = encrypt_e($hashString, $key);
+    return $checksum;
+}
+function getChecksumFromString($str, $key)
 {
 
-    private static $iv = "@@@@&&&&####$$$$";
+    $salt = generateSalt_e(4);
+    $finalString = $str . "|" . $salt;
+    $hash = hash("sha256", $finalString);
+    $hashString = $hash . $salt;
+    $checksum = encrypt_e($hashString, $key);
+    return $checksum;
+}
 
-    static public function encrypt($input, $key)
-    {
-        $key = html_entity_decode($key);
+function verifychecksum_e($arrayList, $key, $checksumvalue)
+{
+    $arrayList = removeCheckSumParam($arrayList);
+    ksort($arrayList);
+    $str = getArray2StrForVerify($arrayList);
+    $paytm_hash = decrypt_e($checksumvalue, $key);
+    $salt = substr($paytm_hash, -4);
 
-        if (function_exists('openssl_encrypt')) {
-            $data = openssl_encrypt($input, "AES-128-CBC", $key, 0, self::$iv);
+    $finalString = $str . "|" . $salt;
+
+    $website_hash = hash("sha256", $finalString);
+    $website_hash .= $salt;
+
+    $validFlag = "FALSE";
+    if ($website_hash == $paytm_hash) {
+        $validFlag = "TRUE";
+    } else {
+        $validFlag = "FALSE";
+    }
+    return $validFlag;
+}
+
+function verifychecksum_eFromStr($str, $key, $checksumvalue)
+{
+    $paytm_hash = decrypt_e($checksumvalue, $key);
+    $salt = substr($paytm_hash, -4);
+
+    $finalString = $str . "|" . $salt;
+
+    $website_hash = hash("sha256", $finalString);
+    $website_hash .= $salt;
+
+    $validFlag = "FALSE";
+    if ($website_hash == $paytm_hash) {
+        $validFlag = "TRUE";
+    } else {
+        $validFlag = "FALSE";
+    }
+    return $validFlag;
+}
+
+function getArray2Str($arrayList)
+{
+    $findme   = 'REFUND';
+    $findmepipe = '|';
+    $paramStr = "";
+    $flag = 1;
+    foreach ($arrayList as $key => $value) {
+        $pos = strpos($value, $findme);
+        $pospipe = strpos($value, $findmepipe);
+        if ($pos !== false || $pospipe !== false) {
+            continue;
+        }
+
+        if ($flag) {
+            $paramStr .= checkString_e($value);
+            $flag = 0;
         } else {
-            $size = mcrypt_get_block_size(MCRYPT_RIJNDAEL_128, 'cbc');
-            $input = self::pkcs5Pad($input, $size);
-            $td = mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', 'cbc', '');
-            mcrypt_generic_init($td, $key, self::$iv);
-            $data = mcrypt_generic($td, $input);
-            mcrypt_generic_deinit($td);
-            mcrypt_module_close($td);
-            $data = base64_encode($data);
+            $paramStr .= "|" . checkString_e($value);
         }
-        return $data;
     }
+    return $paramStr;
+}
 
-    static public function decrypt($encrypted, $key)
-    {
-        $key = html_entity_decode($key);
-
-        if (function_exists('openssl_decrypt')) {
-            $data = openssl_decrypt($encrypted, "AES-128-CBC", $key, 0, self::$iv);
+function getArray2StrForVerify($arrayList)
+{
+    $paramStr = "";
+    $flag = 1;
+    foreach ($arrayList as $key => $value) {
+        if ($flag) {
+            $paramStr .= checkString_e($value);
+            $flag = 0;
         } else {
-            $encrypted = base64_decode($encrypted);
-            $td = mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', 'cbc', '');
-            mcrypt_generic_init($td, $key, self::$iv);
-            $data = mdecrypt_generic($td, $encrypted);
-            mcrypt_generic_deinit($td);
-            mcrypt_module_close($td);
-            $data = self::pkcs5Unpad($data);
-            $data = rtrim($data);
+            $paramStr .= "|" . checkString_e($value);
         }
-        return $data;
     }
+    return $paramStr;
+}
 
-    static public function generateSignature($params, $key)
-    {
-        if (!is_array($params) && !is_string($params)) {
-            throw new Exception("string or array expected, " . gettype($params) . " given");
+function redirect2PG($paramList, $key)
+{
+    $hashString = getchecksumFromArray($paramList, $key);
+    $checksum = encrypt_e($hashString, $key);
+}
+
+function removeCheckSumParam($arrayList)
+{
+    if (isset($arrayList["CHECKSUMHASH"])) {
+        unset($arrayList["CHECKSUMHASH"]);
+    }
+    return $arrayList;
+}
+
+function getTxnStatus($requestParamList)
+{
+    return callAPI(PAYTM_STATUS_QUERY_URL, $requestParamList);
+}
+
+function getTxnStatusNew($requestParamList)
+{
+    return callNewAPI(PAYTM_STATUS_QUERY_NEW_URL, $requestParamList);
+}
+
+function initiateTxnRefund($requestParamList)
+{
+    $CHECKSUM = getRefundChecksumFromArray($requestParamList, PAYTM_MERCHANT_KEY, 0);
+    $requestParamList["CHECKSUM"] = $CHECKSUM;
+    return callAPI(PAYTM_REFUND_URL, $requestParamList);
+}
+
+function callAPI($apiURL, $requestParamList)
+{
+    $jsonResponse = "";
+    $responseParamList = array();
+    $JsonData = json_encode($requestParamList);
+    $postData = 'JsonData=' . urlencode($JsonData);
+    $ch = curl_init($apiURL);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt(
+        $ch,
+        CURLOPT_HTTPHEADER,
+        array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($postData)
+        )
+    );
+    $jsonResponse = curl_exec($ch);
+    $responseParamList = json_decode($jsonResponse, true);
+    return $responseParamList;
+}
+
+function callNewAPI($apiURL, $requestParamList)
+{
+    $jsonResponse = "";
+    $responseParamList = array();
+    $JsonData = json_encode($requestParamList);
+    $postData = 'JsonData=' . urlencode($JsonData);
+    $ch = curl_init($apiURL);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt(
+        $ch,
+        CURLOPT_HTTPHEADER,
+        array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($postData)
+        )
+    );
+    $jsonResponse = curl_exec($ch);
+    $responseParamList = json_decode($jsonResponse, true);
+    return $responseParamList;
+}
+function getRefundChecksumFromArray($arrayList, $key, $sort = 1)
+{
+    if ($sort != 0) {
+        ksort($arrayList);
+    }
+    $str = getRefundArray2Str($arrayList);
+    $salt = generateSalt_e(4);
+    $finalString = $str . "|" . $salt;
+    $hash = hash("sha256", $finalString);
+    $hashString = $hash . $salt;
+    $checksum = encrypt_e($hashString, $key);
+    return $checksum;
+}
+function getRefundArray2Str($arrayList)
+{
+    $findmepipe = '|';
+    $paramStr = "";
+    $flag = 1;
+    foreach ($arrayList as $key => $value) {
+        $pospipe = strpos($value, $findmepipe);
+        if ($pospipe !== false) {
+            continue;
         }
-        if (is_array($params)) {
-            $params = self::getStringByParams($params);
+
+        if ($flag) {
+            $paramStr .= checkString_e($value);
+            $flag = 0;
+        } else {
+            $paramStr .= "|" . checkString_e($value);
         }
-        return self::generateSignatureByString($params, $key);
     }
-
-    static public function verifySignature($params, $key, $checksum)
-    {
-        if (!is_array($params) && !is_string($params)) {
-            throw new Exception("string or array expected, " . gettype($params) . " given");
-        }
-        if (isset($params['CHECKSUMHASH'])) {
-            unset($params['CHECKSUMHASH']);
-        }
-        if (is_array($params)) {
-            $params = self::getStringByParams($params);
-        }
-        return self::verifySignatureByString($params, $key, $checksum);
-    }
-
-    static private function generateSignatureByString($params, $key)
-    {
-        $salt = self::generateRandomString(4);
-        return self::calculateChecksum($params, $key, $salt);
-    }
-
-    static private function verifySignatureByString($params, $key, $checksum)
-    {
-        $paytm_hash = self::decrypt($checksum, $key);
-        $salt = substr($paytm_hash, -4);
-        return $paytm_hash == self::calculateHash($params, $salt) ? true : false;
-    }
-
-    static private function generateRandomString($length)
-    {
-        $random = "";
-        srand((float) microtime() * 1000000);
-
-        $data = "9876543210ZYXWVUTSRQPONMLKJIHGFEDCBAabcdefghijklmnopqrstuvwxyz!@#$&_";
-
-        for ($i = 0; $i < $length; $i++) {
-            $random .= substr($data, (rand() % (strlen($data))), 1);
-        }
-
-        return $random;
-    }
-
-    static private function getStringByParams($params)
-    {
-        ksort($params);
-        $params = array_map(function ($value) {
-            return ($value !== null && strtolower($value) !== "null") ? $value : "";
-        }, $params);
-        return implode("|", $params);
-    }
-
-    static private function calculateHash($params, $salt)
-    {
-        $finalString = $params . "|" . $salt;
-        $hash = hash("sha256", $finalString);
-        return $hash . $salt;
-    }
-
-    static private function calculateChecksum($params, $key, $salt)
-    {
-        $hashString = self::calculateHash($params, $salt);
-        return self::encrypt($hashString, $key);
-    }
-
-    static private function pkcs5Pad($text, $blocksize)
-    {
-        $pad = $blocksize - (strlen($text) % $blocksize);
-        return $text . str_repeat(chr($pad), $pad);
-    }
-
-    static private function pkcs5Unpad($text)
-    {
-        $pad = ord($text[strlen($text) - 1]);
-        if ($pad > strlen($text))
-            return false;
-        return substr($text, 0, -1 * $pad);
-    }
+    return $paramStr;
+}
+function callRefundAPI($refundApiURL, $requestParamList)
+{
+    $jsonResponse = "";
+    $responseParamList = array();
+    $JsonData = json_encode($requestParamList);
+    $postData = 'JsonData=' . urlencode($JsonData);
+    $ch = curl_init($refundApiURL);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($ch, CURLOPT_URL, $refundApiURL);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $headers = array();
+    $headers[] = 'Content-Type: application/json';
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    $jsonResponse = curl_exec($ch);
+    $responseParamList = json_decode($jsonResponse, true);
+    return $responseParamList;
 }
